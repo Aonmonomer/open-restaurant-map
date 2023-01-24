@@ -2,29 +2,22 @@ const backToIndex = () => {
   location.href =
     'file:///Users/sengkitmun/ga_seir/projects/open-restaurant-map/restaurant-review/index.html'
 }
-
-localStorage.setItem('reviews', '[]')
+if (localStorage.getItem('reviews') == null) {
+  localStorage.setItem('reviews', '[]')
+}
 
 const createReview = () => {
   const restName = document.getElementById('restaurantName').value
-  let checkedRadio = 5
+  let checkedRating = 0
 
-  if (document.getElementById('1star').checked == true) {
-    checkedRadio = 1
-  } else if (document.getElementById('2star').checked == true) {
-    checkedRadio = 2
-  } else if (document.getElementById('3star').checked == true) {
-    checkedRadio = 3
-  } else if (document.getElementById('4star').checked == true) {
-    checkedRadio = 4
-  } else if (document.getElementById('5star').checked == true) {
-    checkedRadio = 5
-  } else {
-    alert('Please select a rating.')
+  const ratingArr = document.getElementsByName('rating')
+  for (let i = 0; i < ratingArr.length; i++) {
+    if (ratingArr[i].checked == true) {
+      checkedRating = parseInt(ratingArr[i].value)
+    }
   }
 
-  const review = { name: restName, rating: checkedRadio }
-  const reviews = JSON.stringify([review])
+  const review = { name: restName, rating: checkedRating }
 
   let allreviews = localStorage.getItem('reviews')
   allreviews = JSON.parse(allreviews)
@@ -32,4 +25,6 @@ const createReview = () => {
 
   allreviews = JSON.stringify(allreviews)
   localStorage.setItem('reviews', allreviews)
+
+  backToIndex()
 }
