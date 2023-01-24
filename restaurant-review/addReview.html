@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Funtastic Restaurant Rating</title>
+</head>
+
+<body>
+  <h1>Funtastic Restaurant Rating</h1>
+  <form id="reviewForm" action="">
+    <div>
+      <label for="restaurantName" title="Name of the restaurant">Restaurant Name: </label>
+      <input type="text" id="restaurantName" placeholder="Restaurant name" />
+    </div>
+    <div>
+      <label for="5star">Rating: </label>
+      <input type="radio" id="1star" name="rating" value="1" />
+      <label for="1star">1 Star</label>
+      <input type="radio" id="2star" name="rating" value="2" />
+      <label for="2star">2 Star</label>
+      <input type="radio" id="3star" name="rating" value="3" />
+      <label for="3star">3 Star</label>
+      <input type="radio" id="4star" name="rating" value="4" />
+      <label for="4star">4 Star</label>
+      <input type="radio" id="5star" name="rating" value="5" checked />
+      <label for="5star">5 Star</label>
+    </div>
+    <div style="margin-top: 25px">
+      <button type="button" id="btnReviewSubmit" onclick="createReview()">Submit</button>
+      <button type="button" id="btnBackToIndex" onclick="backToIndex()">Cancel</button>
+    </div>
+  </form>
+  <script src="./addReview.js"></script>
+</body>
+
+</html>
