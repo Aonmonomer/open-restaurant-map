@@ -1,6 +1,12 @@
+//import review model
+import Review from './model/review.js'
+
+//tips
+//research how to import module scripts in html.
+//if not import and export does not work.
+
 const backToIndex = () => {
-  location.href =
-    'file:///Users/sengkitmun/ga_seir/projects/open-restaurant-map/restaurant-review/index.html'
+  location.href = '/index.html'
 }
 if (localStorage.getItem('reviews') == null) {
   localStorage.setItem('reviews', '[]')
@@ -21,7 +27,10 @@ const createReview = () => {
       }
     }
 
-    const review = { name: restName, rating: checkedRating }
+    // replace this line with new review class
+    // const review = { name: restName, rating: checkedRating }
+    // const review = new Review(restName, checkedRating)
+    const review = new Review({ name: restName, rating: checkedRating })
 
     let allreviews = localStorage.getItem('reviews')
     allreviews = JSON.parse(allreviews)
@@ -33,3 +42,9 @@ const createReview = () => {
     backToIndex()
   }
 }
+
+const submitBtn = document.getElementById('btnReviewSubmit')
+submitBtn.addEventListener('click', createReview)
+
+const backToIndexBtn = document.getElementById('btnBackToIndex')
+backToIndexBtn.addEventListener('click', backToIndex)
