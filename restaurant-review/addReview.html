@@ -7,6 +7,7 @@
 
 <body>
   <h1>Funtastic Restaurant Rating</h1>
+
   <form id="reviewForm" action="">
     <div>
       <label for="restaurantName" title="Name of the restaurant">Restaurant Name: </label>
@@ -26,11 +27,14 @@
       <label for="5star">5 Star</label>
     </div>
     <div style="margin-top: 25px">
-      <button type="button" id="btnReviewSubmit" onclick="createReview()">Submit</button>
-      <button type="button" id="btnBackToIndex" onclick="backToIndex()">Cancel</button>
+      <button type="button" id="btnReviewSubmit">Submit</button>
+      <button type="button" id="btnBackToIndex">Cancel</button>
     </div>
   </form>
-  <script src="./addReview.js"></script>
+
+  <!-- below line needs change to import for modules -->
+  <!-- <script type="module" src="./model/review.js"></script> -->
+  <script type="module" src="./addReview.js"></script>
 </body>
 
 </html>
