@@ -1,8 +1,4 @@
 import Review from './model/review.js'
-
-// document.getElementById('btnNewReview').onclick = function () {
-//   location.href = '/addReview.html'
-// }
 ;(function init() {
   if (localStorage.getItem('reviews') == null) {
     localStorage.setItem('reviews', '[]')
@@ -32,38 +28,49 @@ function createReview() {
 
     allreviews = JSON.stringify(allreviews)
     localStorage.setItem('reviews', allreviews)
-    // popupOverlay.style.display = 'none'
-    // popupOverlayDisplay('none')
     closeReviewPopup()
     display()
   }
 }
 
-const submitBtn = document.getElementById('btnReviewSubmit')
-submitBtn.addEventListener('click', createReview)
-
-// const editReview = () => {}
-// const editBtn = document.getElementById('btn')
-// editBtn.addEventListener('click', editReview)
+document
+  .getElementById('btnCreateReviewSave')
+  .addEventListener('click', createReview)
 
 function popupOverlayDisplay(display) {
   const popupOverlay = document.getElementById('popup-overlay')
   popupOverlay.style.display = display
 }
+function hideEditButton() {
+  let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+  let btnCreateReviewSave = document.getElementById('btnCreateReviewSave')
+  btnEditReviewSave.style.display = 'none'
+  btnCreateReviewSave.style.display = 'block'
+}
 
-function showReviewPopup() {
-  // popupOverlay.style.display = 'block'
+function hideCreateButton() {
+  let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+  let btnCreateReviewSave = document.getElementById('btnCreateReviewSave')
+  btnEditReviewSave.style.display = 'block'
+  btnCreateReviewSave.style.display = 'none'
+}
+
+function showReviewPopup(event) {
   popupOverlayDisplay('block')
+  if (event.target.value == 6) {
+    hideEditButton()
+  } else if (event.target.value < 6) {
+    hideCreateButton()
+  }
 }
 const btnNewReview = document.getElementById('btnNewReview')
+btnNewReview.value = 6
 btnNewReview.addEventListener('click', showReviewPopup)
 
 function closeReviewPopup() {
-  // popupOverlay.style.display = 'none'
   popupOverlayDisplay('none')
 }
 
-// rename btnBackToIndex
 const btnClosePopup = document.getElementById('btnClosePopup')
 btnClosePopup.addEventListener('click', closeReviewPopup)
 
@@ -76,14 +83,24 @@ function deleteReview(event) {
   display()
 }
 
+function editReview(event) {
+  showReviewPopup(event)
+  let reviews = localStorage.getItem('reviews')
+  reviews = JSON.parse(reviews)
+  const restName = document.getElementById('restaurantName')
+  let index = event.target.value
+  restName.value = reviews[index].name
+
+  const rating = reviews[index].rating // 1,2,3,4,5
+  const ratingRadioButton = document.getElementsByName('rating') // array - 0,1,2,3,4
+  ratingRadioButton[rating - 1].checked = true
+}
+
 function display() {
   let reviews = localStorage.getItem('reviews')
 
   reviews = JSON.parse(reviews)
 
-  // Build a list of review classes using variable that I have - array of objects
-  //instantiate the class - array / object ---> array of classes
-  // not a single line - manipulate array - loop
   for (let i = 0; i < reviews.length; i++) {
     reviews[i] = new Review(reviews[i])
     console.log(reviews)
@@ -106,19 +123,11 @@ function display() {
     divRating.innerText = reviews[i].rating
     divReview.appendChild(divRating)
 
-    // const editReview = () => {
-    //   const divEditRestName = document.createElement('input')
-    //   divEditRestName.value = 'Cedric'
-    //   divRestName.appendChild(divEditRestName)
-    //   // const divEditRating = document.createElement('input')
-    //   // divEditRating.type = "checkbox"
-    // }
-
     const btnEditReview = document.createElement('button')
     btnEditReview.innerText = 'Edit'
-    // btnEditReview.id = 'btnEditReview' + i
+    btnEditReview.value = i
     divReview.appendChild(btnEditReview)
-    // btnEditReview.addEventListener('click', editReview)
+    btnEditReview.addEventListener('click', editReview)
 
     const btnDeleteReview = document.createElement('button')
     btnDeleteReview.innerText = 'Delete'
