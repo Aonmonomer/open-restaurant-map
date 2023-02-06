@@ -57,6 +57,7 @@ function hideCreateButton() {
 
 function showReviewPopup(event) {
   popupOverlayDisplay('block')
+  //TODO: refactor to use button ID instead of assigning a number 6 / readability
   if (event.target.value == 6) {
     hideEditButton()
   } else if (event.target.value < 6) {
@@ -94,8 +95,39 @@ function editReview(event) {
   const rating = reviews[index].rating // 1,2,3,4,5
   const ratingRadioButton = document.getElementsByName('rating') // array - 0,1,2,3,4
   ratingRadioButton[rating - 1].checked = true
+  let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+  btnEditReviewSave.value = index
 }
 
+let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+// btnEditReviewSave.value = index
+btnEditReviewSave.addEventListener('click', editReviewSave)
+
+function editReviewSave(event) {
+  const restaurantName = document.getElementById('restaurantName').value
+  let index = event.target.value
+  if (restaurantName === '' || restaurantName === null) {
+    alert('Please enter a restaurant name.')
+  } else {
+    let checkedRating = 0
+    const ratingArr = document.getElementsByName('rating')
+    for (let i = 0; i < ratingArr.length; i++) {
+      if (ratingArr[i].checked) {
+        checkedRating = parseInt(ratingArr[i].value)
+      }
+    }
+    const review = new Review({ name: restaurantName, rating: checkedRating })
+
+    let allreviews = localStorage.getItem('reviews')
+    allreviews = JSON.parse(allreviews)
+    allreviews.splice(index, 1, review)
+
+    allreviews = JSON.stringify(allreviews)
+    localStorage.setItem('reviews', allreviews)
+    closeReviewPopup()
+    display()
+  }
+}
 function display() {
   let reviews = localStorage.getItem('reviews')
 
@@ -126,6 +158,7 @@ function display() {
     const btnEditReview = document.createElement('button')
     btnEditReview.innerText = 'Edit'
     btnEditReview.value = i
+
     divReview.appendChild(btnEditReview)
     btnEditReview.addEventListener('click', editReview)
 
