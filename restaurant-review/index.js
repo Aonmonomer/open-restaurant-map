@@ -15,11 +15,18 @@ function createReview() {
     let checkedRating = 0
 
     const ratingArr = document.getElementsByName('rating')
-    for (let i = 0; i < ratingArr.length; i++) {
-      if (ratingArr[i].checked == true) {
-        checkedRating = parseInt(ratingArr[i].value)
+
+    //TODO: Refactor for loop using array method - node list to array first
+    ratingArr.forEach(function (eachRating) {
+      if (eachRating.checked) {
+        checkedRating = parseInt(eachRating.value)
       }
-    }
+    })
+    // for (let i = 0; i < ratingArr.length; i++) {
+    //   if (ratingArr[i].checked == true) {
+    //     checkedRating = parseInt(ratingArr[i].value)
+    //   }
+    // }
     const review = new Review({ name: restName, rating: checkedRating })
 
     let allreviews = localStorage.getItem('reviews')
@@ -57,15 +64,17 @@ function hideCreateButton() {
 
 function showReviewPopup(event) {
   popupOverlayDisplay('block')
+  console.log(event.target.value)
   //TODO: refactor to use button ID instead of assigning a number 6 / readability
-  if (event.target.value == 6) {
+  if (event.target.value == 'true') {
     hideEditButton()
-  } else if (event.target.value < 6) {
+    // } else if (event.target.value < 6) {
+  } else {
     hideCreateButton()
   }
 }
 const btnNewReview = document.getElementById('btnNewReview')
-btnNewReview.value = 6
+btnNewReview.value = 'true'
 btnNewReview.addEventListener('click', showReviewPopup)
 
 function closeReviewPopup() {
@@ -110,12 +119,20 @@ function editReviewSave(event) {
     alert('Please enter a restaurant name.')
   } else {
     let checkedRating = 0
+
     const ratingArr = document.getElementsByName('rating')
-    for (let i = 0; i < ratingArr.length; i++) {
-      if (ratingArr[i].checked) {
-        checkedRating = parseInt(ratingArr[i].value)
+
+    //TODO : Refactor for loop using array method - node list to array first
+    ratingArr.forEach(function (eachRating) {
+      if (eachRating.checked) {
+        checkedRating = parseInt(eachRating.value)
       }
-    }
+    })
+    // for (let i = 0; i < ratingArr.length; i++) {
+    //   if (ratingArr[i].checked) {
+    //     checkedRating = parseInt(ratingArr[i].value)
+    //   }
+    // }
     const review = new Review({ name: restaurantName, rating: checkedRating })
 
     let allreviews = localStorage.getItem('reviews')
@@ -132,16 +149,19 @@ function display() {
   let reviews = localStorage.getItem('reviews')
 
   reviews = JSON.parse(reviews)
-
-  for (let i = 0; i < reviews.length; i++) {
-    reviews[i] = new Review(reviews[i])
-    console.log(reviews)
-  }
+  // TODO: Refactor for loop using array method - Array.map
+  // use return keyword in function
+  reviews = reviews.map((review) => new Review(review))
+  // for (let i = 0; i < reviews.length; i++) {
+  //   reviews[i] = new Review(reviews[i])
+  // }
 
   const allReviewsDiv = document.getElementById('allReviewsDiv')
   allReviewsDiv.innerHTML = ''
 
   // 22-36 should work without changes
+
+  // TODO: Refactor for loop using array method - Array.forEach
   for (let i = 0; i < reviews.length; i++) {
     const divReview = document.createElement('div')
 
