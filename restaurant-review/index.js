@@ -7,32 +7,14 @@ import Review from './model/review.js'
 })()
 
 function searchReviewByRestaurantName() {
-  const searchByRestaurantNameInput = document.getElementById(
-    'searchByRestaurantNameInput'
-  ).value
-  let reviews = localStorage.getItem('reviews')
-  reviews = JSON.parse(reviews)
-
-  const filterByRestaurantName = reviews.filter(
-    (review) => review.name === searchByRestaurantNameInput
-  )
-  console.log(filterByRestaurantName)
-
-  const allDivFilteredResults = document.getElementById('allDivFilteredResults')
-  allDivFilteredResults.innerHTML = ''
-
-  for (let i = 0; i < filterByRestaurantName.length; i++) {
-    const divFilteredResults = document.createElement('div')
-    divFilteredResults.innerText = filterByRestaurantName[i].name
-    allDivFilteredResults.appendChild(divFilteredResults)
-  }
+  display()
 }
 
 // how to write filter syntax
 
 document
-  .getElementById('btnSearchByRestaurantName')
-  .addEventListener('click', searchReviewByRestaurantName)
+  .getElementById('searchByRestaurantNameInput')
+  .addEventListener('keyup', searchReviewByRestaurantName)
 // you can refactor it to on change event .addEventListener("change"
 
 function createReview() {
@@ -192,11 +174,18 @@ function display() {
   const allReviewsDiv = document.getElementById('allReviewsDiv')
   allReviewsDiv.innerHTML = ''
 
-  // 22-36 should work without changes
+  const searchByRestaurantNameInput = document.getElementById(
+    'searchByRestaurantNameInput'
+  ).value
+
+  const filterByRestaurantName = reviews.filter((review) => {
+    return review.name.includes(searchByRestaurantNameInput)
+  })
+  console.log(filterByRestaurantName)
 
   // TODO: Refactor for loop using array method - Array.forEach
   // for (let i = 0; i < reviews.length; i++) {
-  reviews.forEach(function (review, i) {
+  filterByRestaurantName.forEach(function (review, i) {
     const divReview = document.createElement('div')
 
     const divRestName = document.createElement('div')
