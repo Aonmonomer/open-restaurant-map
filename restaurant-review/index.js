@@ -6,6 +6,35 @@ import Review from './model/review.js'
   display()
 })()
 
+function searchReviewByRestaurantName() {
+  const searchByRestaurantNameInput = document.getElementById(
+    'searchByRestaurantNameInput'
+  ).value
+  let reviews = localStorage.getItem('reviews')
+  reviews = JSON.parse(reviews)
+
+  const filterByRestaurantName = reviews.filter(
+    (review) => review.name === searchByRestaurantNameInput
+  )
+  console.log(filterByRestaurantName)
+
+  const allDivFilteredResults = document.getElementById('allDivFilteredResults')
+  allDivFilteredResults.innerHTML = ''
+
+  for (let i = 0; i < filterByRestaurantName.length; i++) {
+    const divFilteredResults = document.createElement('div')
+    divFilteredResults.innerText = filterByRestaurantName[i].name
+    allDivFilteredResults.appendChild(divFilteredResults)
+  }
+}
+
+// how to write filter syntax
+
+document
+  .getElementById('btnSearchByRestaurantName')
+  .addEventListener('click', searchReviewByRestaurantName)
+// you can refactor it to on change event .addEventListener("change"
+
 function createReview() {
   const restName = document.getElementById('restaurantName').value
 
@@ -61,20 +90,22 @@ function hideCreateButton() {
   btnEditReviewSave.style.display = 'block'
   btnCreateReviewSave.style.display = 'none'
 }
-
+// Reset Popup to default value
 function showReviewPopup(event) {
-  popupOverlayDisplay('block')
-  console.log(event.target.value)
   //TODO: refactor to use button ID instead of assigning a number 6 / readability
-  if (event.target.value == 'true') {
+
+  if (event.target.create == 'true') {
     hideEditButton()
-    // } else if (event.target.value < 6) {
+    let inputRestName = document.getElementById('restaurantName')
+    inputRestName.value = ''
+    document.getElementById('5star').checked = true
   } else {
     hideCreateButton()
   }
+  popupOverlayDisplay('block')
 }
 const btnNewReview = document.getElementById('btnNewReview')
-btnNewReview.value = 'true'
+btnNewReview.create = 'true'
 btnNewReview.addEventListener('click', showReviewPopup)
 
 function closeReviewPopup() {
@@ -151,7 +182,9 @@ function display() {
   reviews = JSON.parse(reviews)
   // TODO: Refactor for loop using array method - Array.map
   // use return keyword in function
-  reviews = reviews.map((review) => new Review(review))
+  reviews = reviews.map(function (review) {
+    return new Review(review)
+  })
   // for (let i = 0; i < reviews.length; i++) {
   //   reviews[i] = new Review(reviews[i])
   // }
@@ -162,17 +195,18 @@ function display() {
   // 22-36 should work without changes
 
   // TODO: Refactor for loop using array method - Array.forEach
-  for (let i = 0; i < reviews.length; i++) {
+  // for (let i = 0; i < reviews.length; i++) {
+  reviews.forEach(function (review, i) {
     const divReview = document.createElement('div')
 
     const divRestName = document.createElement('div')
     // divRestName.setAttribute('id', 'review' + (i + 1))
-    divRestName.innerText = reviews[i].name
+    divRestName.innerText = review.name
     divReview.appendChild(divRestName)
 
     const divRating = document.createElement('div')
     // divRating.setAttribute('id', 'review' + (i + 1))
-    divRating.innerText = reviews[i].rating
+    divRating.innerText = review.rating
     divReview.appendChild(divRating)
 
     const btnEditReview = document.createElement('button')
@@ -190,5 +224,5 @@ function display() {
     btnDeleteReview.addEventListener('click', deleteReview)
 
     allReviewsDiv.appendChild(divReview)
-  }
+  })
 }

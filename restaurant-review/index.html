@@ -8,7 +8,12 @@
 <body>
 
   <h1>Funtastic Restaurant Rating</h1>
-  <button type="button" id="btnNewReview">Create New Review</button>
+
+  <input type="text" placeholder="Search with restaurant name" id="searchByRestaurantNameInput" autocomplete="on">
+  <button id="btnSearchByRestaurantName">Search</button>
+
+  <div id="allDivFilteredResults"></div>
+  <button type="button" id="btnNewReview" create="true" class="btnNewReview">Create New Review</button>
 
   <div id="popup-overlay">
     <div id="popup-content">
