@@ -100,7 +100,8 @@ btnClosePopup.addEventListener('click', closeReviewPopup)
 function deleteReview(event) {
   let reviews = localStorage.getItem('reviews')
   reviews = JSON.parse(reviews)
-  reviews.splice(event.target.value, 1)
+  const index = event.target.value
+  reviews.splice(index, 1)
   reviews = JSON.stringify(reviews)
   localStorage.setItem('reviews', reviews)
   display()
@@ -108,17 +109,31 @@ function deleteReview(event) {
 
 function editReview(event) {
   showReviewPopup(event)
-  let reviews = localStorage.getItem('reviews')
+  let reviews = localStorage.getItem('reviews') // old array
   reviews = JSON.parse(reviews)
   const restName = document.getElementById('restaurantName')
-  let index = event.target.value
-  restName.value = reviews[index].name
+  // const searchByRestaurantNameInput = document.getElementById(
+  //   'searchByRestaurantNameInput'
+  // ).value
 
-  const rating = reviews[index].rating // 1,2,3,4,5
-  const ratingRadioButton = document.getElementsByName('rating') // array - 0,1,2,3,4
-  ratingRadioButton[rating - 1].checked = true
-  let btnEditReviewSave = document.getElementById('btnEditReviewSave')
-  btnEditReviewSave.value = index
+  // const filterByRestaurantName = reviews.filter((review) => {
+  //   return review.name.includes(searchByRestaurantNameInput)
+  // })
+  let id = event.target.value //problem
+  // console.log(typeof id)
+
+  for (let i = 0; i < reviews.length; i++) {
+    if (id == reviews[i].id) {
+      // console.log(typeof reviews[i].id)
+      restName.value = reviews[i].name
+
+      const rating = reviews[i].rating // 1,2,3,4,5
+      const ratingRadioButton = document.getElementsByName('rating') // array - 0,1,2,3,4
+      ratingRadioButton[rating - 1].checked = true
+      let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+      btnEditReviewSave.value = i
+    }
+  }
 }
 
 let btnEditReviewSave = document.getElementById('btnEditReviewSave')
@@ -165,6 +180,7 @@ function display() {
   // TODO: Refactor for loop using array method - Array.map
   // use return keyword in function
   reviews = reviews.map(function (review) {
+    // console.log(review)
     return new Review(review)
   })
   // for (let i = 0; i < reviews.length; i++) {
@@ -200,14 +216,15 @@ function display() {
 
     const btnEditReview = document.createElement('button')
     btnEditReview.innerText = 'Edit'
-    btnEditReview.value = i
+    console.log(review.id)
+    btnEditReview.value = review.id
 
     divReview.appendChild(btnEditReview)
     btnEditReview.addEventListener('click', editReview)
 
     const btnDeleteReview = document.createElement('button')
     btnDeleteReview.innerText = 'Delete'
-    btnDeleteReview.value = i
+    btnDeleteReview.value = review.id
     divReview.appendChild(btnDeleteReview)
     // btnDeleteReview.addEventListener('click', deleteReview)
     btnDeleteReview.addEventListener('click', deleteReview)
