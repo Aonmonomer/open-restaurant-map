@@ -15,20 +15,16 @@ export default class Review {
       // console.log(option.id)
     } else {
       let reviews = localStorage.getItem('reviews')
-      // console.log(reviews)
+
       reviews = JSON.parse(reviews)
-      // console.log(reviews)
       if (reviews.length === 0) {
         this.id = 1
       } else {
         const maxId = reviews.reduce((max, obj) => {
-          // console.log(obj.id)
-          // console.log(max)
           return obj.id > max ? obj.id : max
         }, 0)
 
         this.id = maxId + 1
-        // console.log(this.id)
       }
     }
     // getitem from localstorage

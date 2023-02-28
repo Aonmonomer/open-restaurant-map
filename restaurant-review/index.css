@@ -24,6 +24,24 @@
 
 .btnNewReview{
   display: block;
+  font-size: medium;
   /* position: absolute;
   top: 10px; */
+}
+
+.main-title{
+  text-align: center;
+}
+
+.search-field{
+  font-size: large;
+  width: 400px;
+}
+
+.search-container{
+  display: flex;
+  justify-content: center;
+}
+.search-btn{
+font-size: large;
 }

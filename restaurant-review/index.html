@@ -7,10 +7,12 @@
 
 <body>
 
-  <h1>Funtastic Restaurant Rating</h1>
-
-  <input type="text" placeholder="Search with restaurant name" id="searchByRestaurantNameInput" autocomplete="on">
-  <button id="btnSearchByRestaurantName">Search</button>
+  <h1 class="main-title">Funtastic Restaurant Rating</h1>
+  <div class="search-container">
+    <input type="text" placeholder="Search with restaurant name" class="search-field" id="searchByRestaurantNameInput"
+      autocomplete="on">
+    <button class="search-btn" id="btnSearchByRestaurantName">Search</button>
+  </div>
 
   <div id="allDivFilteredResults"></div>
   <button type="button" id="btnNewReview" create="true" class="btnNewReview">Create New Review</button>
