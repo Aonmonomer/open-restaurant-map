@@ -34,12 +34,14 @@ function createReview() {
 
     const review = new Review({ name: restName, rating: checkedRating })
 
-    let allreviews = localStorage.getItem('reviews')
-    allreviews = JSON.parse(allreviews)
-    allreviews.push(review)
+    // let allreviews = localStorage.getItem('reviews')
+    // allreviews = JSON.parse(allreviews)
+    // allreviews.push(review)
 
-    allreviews = JSON.stringify(allreviews)
-    localStorage.setItem('reviews', allreviews)
+    // allreviews = JSON.stringify(allreviews)
+    // localStorage.setItem('reviews', allreviews)
+
+    ReviewService.insert(review)
     closeReviewPopup()
     display()
   }
@@ -89,17 +91,20 @@ const btnClosePopup = document.getElementById('btnClosePopup')
 btnClosePopup.addEventListener('click', closeReviewPopup)
 
 function deleteReview(event) {
-  let reviews = localStorage.getItem('reviews')
-  reviews = JSON.parse(reviews)
+  // let reviews = localStorage.getItem('reviews')
+  // reviews = JSON.parse(reviews)
 
-  const id = event.target.value
-  for (let i = 0; i < reviews.length; i++) {
-    if (id == reviews[i].id) {
-      reviews.splice(i, 1)
-    }
-  }
-  reviews = JSON.stringify(reviews)
-  localStorage.setItem('reviews', reviews)
+  // const id = event.target.value
+  // for (let i = 0; i < reviews.length; i++) {
+  //   if (id == reviews[i].id) {
+  //     reviews.splice(i, 1)
+  //   }
+  // }
+  // reviews = JSON.stringify(reviews)
+  // localStorage.setItem('reviews', reviews)
+
+  const id = parseInt(event.target.value)
+  ReviewService.delete(id)
   display()
 }
 
@@ -115,6 +120,8 @@ function editReview(event) {
   const ratingRadioButton = document.getElementsByName('rating')
   const rating = review.rating
   ratingRadioButton[rating - 1].checked = true
+  let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+  btnEditReviewSave.value = id
 
   // let reviews = localStorage.getItem('reviews') // old array
   // reviews = JSON.parse(reviews)
@@ -140,7 +147,7 @@ btnEditReviewSave.addEventListener('click', editReviewSave)
 
 function editReviewSave(event) {
   const restaurantName = document.getElementById('restaurantName').value
-  let index = event.target.value
+
   // use for loop to compare primary key
   if (restaurantName === '' || restaurantName === null) {
     alert('Please enter a restaurant name.')
@@ -157,12 +164,16 @@ function editReviewSave(event) {
 
     const review = new Review({ name: restaurantName, rating: checkedRating })
 
-    let allreviews = localStorage.getItem('reviews')
-    allreviews = JSON.parse(allreviews)
-    allreviews.splice(index, 1, review)
+    // let allreviews = localStorage.getItem('reviews')
+    // allreviews = JSON.parse(allreviews)
+    // allreviews.splice(index, 1, review)
 
-    allreviews = JSON.stringify(allreviews)
-    localStorage.setItem('reviews', allreviews)
+    // allreviews = JSON.stringify(allreviews)
+    // localStorage.setItem('reviews', allreviews)
+    const id = parseInt(event.target.value)
+    // console.log('id in index: ' + id)
+    ReviewService.update(id, review)
+
     closeReviewPopup()
     display()
   }
@@ -202,7 +213,7 @@ function display() {
 
     const btnEditReview = document.createElement('button')
     btnEditReview.innerText = 'Edit'
-    console.log(review.id)
+    // console.log(review.id)
     btnEditReview.value = review.id
 
     divReview.appendChild(btnEditReview)

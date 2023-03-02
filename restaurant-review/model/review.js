@@ -32,7 +32,7 @@ export default class Review {
     // if array.length === 0 then create an id variable and put 1 into it       this.id = 1
     // else const maxId = myArray.reduce((max, obj) => obj.id > max ? obj.id : max, 0);
     // reviews.maxId + 1     this.id = maxId +1
-
+    // this.id = option.id
     this.name = option.name
     this.rating = option.rating
   }
