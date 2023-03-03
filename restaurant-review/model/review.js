@@ -5,37 +5,41 @@
 //import will not work without proper html change
 
 export default class Review {
-  // constructor(name, rating) {
-  //   this.name = name
-  //   this.rating = rating
-  // }
   constructor(option) {
-    if (option.id) {
-      this.id = option.id
-      // console.log(option.id)
-    } else {
-      let reviews = localStorage.getItem('reviews')
+    //   if (option.id) {
+    //     this.id = option.id
+    //     // console.log(option.id)
+    //   } else {
+    //     let reviews = localStorage.getItem('reviews')
 
-      reviews = JSON.parse(reviews)
-      if (reviews.length === 0) {
-        this.id = 1
-      } else {
-        const maxId = reviews.reduce((max, obj) => {
-          return obj.id > max ? obj.id : max
-        }, 0)
+    //     reviews = JSON.parse(reviews)
+    //     if (reviews.length === 0) {
+    //       this.id = 1
+    //     } else {
+    //       const maxId = reviews.reduce((max, obj) => {
+    //         return obj.id > max ? obj.id : max
+    //       }, 0)
 
-        this.id = maxId + 1
-      }
-    }
+    //       this.id = maxId + 1
+    //     }
+    //   }
     // getitem from localstorage
     // JSON parse the get item rom local storage
     // if array.length === 0 then create an id variable and put 1 into it       this.id = 1
     // else const maxId = myArray.reduce((max, obj) => obj.id > max ? obj.id : max, 0);
     // reviews.maxId + 1     this.id = maxId +1
-    // this.id = option.id
+
+    this.id = option.id
     this.name = option.name
     this.rating = option.rating
   }
+
+  // abc(){
+  //   this.id += 1
+  // }
+  // poki(){
+  //   this.name = 'poki'
+  // }
 }
 // ;() => {
 //   return 1

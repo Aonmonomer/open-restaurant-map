@@ -8,31 +8,35 @@ export default class ReviewService {
     //id (primary key) will be generated here
     let reviews = ReviewService.findAll()
 
-    // if (reviews.length === 0) {
-    //   this.id = 1
-    // } else {
-    //   const maxId = reviews.reduce((max, obj) => {
-    //     return obj.id > max ? obj.id : max
-    //   }, 0)
-    //   this.id = maxId + 1
-    //   console.log(this.id)
-    //   reviews.push(review)
-    //   reviews = JSON.stringify(reviews)
-    //   localStorage.setItem('reviews', reviews)
-    // }
+    if (reviews.length === 0) {
+      review.id = 1
+    } else {
+      const maxId = reviews.reduce((maximum, element) => {
+        if (element.id > maximum) {
+          return element.id
+        } else {
+          return maximum
+        }
+      }, 0)
+
+      review.id = maxId + 1
+    }
+
     reviews.push(review)
     reviews = JSON.stringify(reviews)
     localStorage.setItem('reviews', reviews)
   }
 
-  static update(id, review) {
+  static update(review) {
     // update a single review class in local storage
     // based on the review class id
     let reviews = ReviewService.findAll()
 
     // console.log('id: ' + id)
-    // console.log('review: ' + review)
-    const idIndex = reviews.findIndex((review) => review.id === id)
+    // console.log('review: ' + review.id)
+    const idIndex = reviews.findIndex(
+      (eachReview) => eachReview.id === review.id
+    )
 
     reviews.splice(idIndex, 1, review)
     reviews = JSON.stringify(reviews)

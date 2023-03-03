@@ -34,13 +34,6 @@ function createReview() {
 
     const review = new Review({ name: restName, rating: checkedRating })
 
-    // let allreviews = localStorage.getItem('reviews')
-    // allreviews = JSON.parse(allreviews)
-    // allreviews.push(review)
-
-    // allreviews = JSON.stringify(allreviews)
-    // localStorage.setItem('reviews', allreviews)
-
     ReviewService.insert(review)
     closeReviewPopup()
     display()
@@ -114,7 +107,7 @@ function editReview(event) {
   let id = parseInt(event.target.value)
   // console.log(id)
   const review = ReviewService.find(id)
-  console.log(review)
+  // console.log(review)
   const restName = document.getElementById('restaurantName')
   restName.value = review.name
   const ratingRadioButton = document.getElementsByName('rating')
@@ -122,24 +115,6 @@ function editReview(event) {
   ratingRadioButton[rating - 1].checked = true
   let btnEditReviewSave = document.getElementById('btnEditReviewSave')
   btnEditReviewSave.value = id
-
-  // let reviews = localStorage.getItem('reviews') // old array
-  // reviews = JSON.parse(reviews)
-  // const restName = document.getElementById('restaurantName')
-
-  // let id = event.target.value
-
-  // for (let i = 0; i < reviews.length; i++) {
-  //   if (id == reviews[i].id) {
-  //     restName.value = reviews[i].name
-
-  //     const rating = reviews[i].rating // 1,2,3,4,5
-  //     const ratingRadioButton = document.getElementsByName('rating') // array - 0,1,2,3,4
-  //     ratingRadioButton[rating - 1].checked = true
-  //     let btnEditReviewSave = document.getElementById('btnEditReviewSave')
-  //     btnEditReviewSave.value = i
-  //   }
-  // }
 }
 
 let btnEditReviewSave = document.getElementById('btnEditReviewSave')
@@ -162,30 +137,19 @@ function editReviewSave(event) {
       }
     })
 
-    const review = new Review({ name: restaurantName, rating: checkedRating })
+    const review = new Review({
+      id: parseInt(event.target.value),
+      name: restaurantName,
+      rating: checkedRating
+    })
 
-    // let allreviews = localStorage.getItem('reviews')
-    // allreviews = JSON.parse(allreviews)
-    // allreviews.splice(index, 1, review)
-
-    // allreviews = JSON.stringify(allreviews)
-    // localStorage.setItem('reviews', allreviews)
-    const id = parseInt(event.target.value)
-    // console.log('id in index: ' + id)
-    ReviewService.update(id, review)
+    ReviewService.update(review)
 
     closeReviewPopup()
     display()
   }
 }
 function display() {
-  // let reviews = localStorage.getItem('reviews')
-
-  // reviews = JSON.parse(reviews)
-
-  // reviews = reviews.map(function (review) {
-  //   return new Review(review)
-  // })
   const reviews = ReviewService.findAll()
 
   const allReviewsDiv = document.getElementById('allReviewsDiv')
