@@ -1,14 +1,19 @@
 import Review from './model/review.js'
-
-// document.getElementById('btnNewReview').onclick = function () {
-//   location.href = '/addReview.html'
-// }
+import ReviewService from './service/reviewService.js'
 ;(function init() {
   if (localStorage.getItem('reviews') == null) {
     localStorage.setItem('reviews', '[]')
   }
   display()
 })()
+
+function searchReviewByRestaurantName() {
+  display()
+}
+
+document
+  .getElementById('searchByRestaurantNameInput')
+  .addEventListener('keyup', searchReviewByRestaurantName)
 
 function createReview() {
   const restName = document.getElementById('restaurantName').value
@@ -19,114 +24,171 @@ function createReview() {
     let checkedRating = 0
 
     const ratingArr = document.getElementsByName('rating')
-    for (let i = 0; i < ratingArr.length; i++) {
-      if (ratingArr[i].checked == true) {
-        checkedRating = parseInt(ratingArr[i].value)
+
+    //TODO: Refactor for loop using array method - node list to array first
+    ratingArr.forEach(function (eachRating) {
+      if (eachRating.checked) {
+        checkedRating = parseInt(eachRating.value)
       }
-    }
+    })
+
     const review = new Review({ name: restName, rating: checkedRating })
 
-    let allreviews = localStorage.getItem('reviews')
-    allreviews = JSON.parse(allreviews)
-    allreviews.push(review)
-
-    allreviews = JSON.stringify(allreviews)
-    localStorage.setItem('reviews', allreviews)
-    // popupOverlay.style.display = 'none'
-    // popupOverlayDisplay('none')
+    ReviewService.insert(review)
     closeReviewPopup()
     display()
   }
 }
 
-const submitBtn = document.getElementById('btnReviewSubmit')
-submitBtn.addEventListener('click', createReview)
-
-// const editReview = () => {}
-// const editBtn = document.getElementById('btn')
-// editBtn.addEventListener('click', editReview)
+document
+  .getElementById('btnCreateReviewSave')
+  .addEventListener('click', createReview)
 
 function popupOverlayDisplay(display) {
   const popupOverlay = document.getElementById('popup-overlay')
   popupOverlay.style.display = display
 }
+function hideEditButton() {
+  let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+  let btnCreateReviewSave = document.getElementById('btnCreateReviewSave')
+  btnEditReviewSave.style.display = 'none'
+  btnCreateReviewSave.style.display = 'block'
+}
 
-function showReviewPopup() {
-  // popupOverlay.style.display = 'block'
+function hideCreateButton() {
+  let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+  let btnCreateReviewSave = document.getElementById('btnCreateReviewSave')
+  btnEditReviewSave.style.display = 'block'
+  btnCreateReviewSave.style.display = 'none'
+}
+function showReviewPopup(event) {
+  if (event.target.create == 'true') {
+    hideEditButton()
+    let inputRestName = document.getElementById('restaurantName')
+    inputRestName.value = ''
+    document.getElementById('5star').checked = true
+  } else {
+    hideCreateButton()
+  }
   popupOverlayDisplay('block')
 }
 const btnNewReview = document.getElementById('btnNewReview')
+btnNewReview.create = 'true'
 btnNewReview.addEventListener('click', showReviewPopup)
 
 function closeReviewPopup() {
-  // popupOverlay.style.display = 'none'
   popupOverlayDisplay('none')
 }
 
-// rename btnBackToIndex
 const btnClosePopup = document.getElementById('btnClosePopup')
 btnClosePopup.addEventListener('click', closeReviewPopup)
 
 function deleteReview(event) {
-  let reviews = localStorage.getItem('reviews')
-  reviews = JSON.parse(reviews)
-  reviews.splice(event.target.value, 1)
-  reviews = JSON.stringify(reviews)
-  localStorage.setItem('reviews', reviews)
+  // let reviews = localStorage.getItem('reviews')
+  // reviews = JSON.parse(reviews)
+
+  // const id = event.target.value
+  // for (let i = 0; i < reviews.length; i++) {
+  //   if (id == reviews[i].id) {
+  //     reviews.splice(i, 1)
+  //   }
+  // }
+  // reviews = JSON.stringify(reviews)
+  // localStorage.setItem('reviews', reviews)
+
+  const id = parseInt(event.target.value)
+  ReviewService.delete(id)
   display()
 }
 
-function display() {
-  let reviews = localStorage.getItem('reviews')
+function editReview(event) {
+  showReviewPopup(event)
 
-  reviews = JSON.parse(reviews)
+  let id = parseInt(event.target.value)
+  // console.log(id)
+  const review = ReviewService.find(id)
+  // console.log(review)
+  const restName = document.getElementById('restaurantName')
+  restName.value = review.name
+  const ratingRadioButton = document.getElementsByName('rating')
+  const rating = review.rating
+  ratingRadioButton[rating - 1].checked = true
+  let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+  btnEditReviewSave.value = id
+}
 
-  // Build a list of review classes using variable that I have - array of objects
-  //instantiate the class - array / object ---> array of classes
-  // not a single line - manipulate array - loop
-  for (let i = 0; i < reviews.length; i++) {
-    reviews[i] = new Review(reviews[i])
-    console.log(reviews)
+let btnEditReviewSave = document.getElementById('btnEditReviewSave')
+btnEditReviewSave.addEventListener('click', editReviewSave)
+
+function editReviewSave(event) {
+  const restaurantName = document.getElementById('restaurantName').value
+
+  // use for loop to compare primary key
+  if (restaurantName === '' || restaurantName === null) {
+    alert('Please enter a restaurant name.')
+  } else {
+    let checkedRating = 0
+
+    const ratingArr = document.getElementsByName('rating')
+
+    ratingArr.forEach(function (eachRating) {
+      if (eachRating.checked) {
+        checkedRating = parseInt(eachRating.value)
+      }
+    })
+
+    const review = new Review({
+      id: parseInt(event.target.value),
+      name: restaurantName,
+      rating: checkedRating
+    })
+
+    ReviewService.update(review)
+
+    closeReviewPopup()
+    display()
   }
+}
+function display() {
+  const reviews = ReviewService.findAll()
 
   const allReviewsDiv = document.getElementById('allReviewsDiv')
   allReviewsDiv.innerHTML = ''
 
-  // 22-36 should work without changes
-  for (let i = 0; i < reviews.length; i++) {
+  const searchByRestaurantNameInput = document.getElementById(
+    'searchByRestaurantNameInput'
+  ).value
+
+  const filterByRestaurantName = reviews.filter((review) => {
+    return review.name.includes(searchByRestaurantNameInput)
+  })
+  console.log(filterByRestaurantName)
+
+  filterByRestaurantName.forEach(function (review, i) {
     const divReview = document.createElement('div')
 
     const divRestName = document.createElement('div')
-    // divRestName.setAttribute('id', 'review' + (i + 1))
-    divRestName.innerText = reviews[i].name
+    divRestName.innerText = review.name
     divReview.appendChild(divRestName)
 
     const divRating = document.createElement('div')
-    // divRating.setAttribute('id', 'review' + (i + 1))
-    divRating.innerText = reviews[i].rating
+    divRating.innerText = review.rating
     divReview.appendChild(divRating)
-
-    // const editReview = () => {
-    //   const divEditRestName = document.createElement('input')
-    //   divEditRestName.value = 'Cedric'
-    //   divRestName.appendChild(divEditRestName)
-    //   // const divEditRating = document.createElement('input')
-    //   // divEditRating.type = "checkbox"
-    // }
 
     const btnEditReview = document.createElement('button')
     btnEditReview.innerText = 'Edit'
-    // btnEditReview.id = 'btnEditReview' + i
+    // console.log(review.id)
+    btnEditReview.value = review.id
+
     divReview.appendChild(btnEditReview)
-    // btnEditReview.addEventListener('click', editReview)
+    btnEditReview.addEventListener('click', editReview)
 
     const btnDeleteReview = document.createElement('button')
     btnDeleteReview.innerText = 'Delete'
-    btnDeleteReview.value = i
+    btnDeleteReview.value = review.id
     divReview.appendChild(btnDeleteReview)
-    // btnDeleteReview.addEventListener('click', deleteReview)
     btnDeleteReview.addEventListener('click', deleteReview)
 
     allReviewsDiv.appendChild(divReview)
-  }
+  })
 }
