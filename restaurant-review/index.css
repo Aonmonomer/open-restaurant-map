@@ -25,8 +25,6 @@
 .btnNewReview{
   display: block;
   font-size: medium;
-  /* position: absolute;
-  top: 10px; */
 }
 
 .main-title{
@@ -34,14 +32,10 @@
 }
 
 .search-field{
-  font-size: large;
   width: 400px;
 }
 
 .search-container{
   display: flex;
   justify-content: center;
-}
-.search-btn{
-font-size: large;
 }

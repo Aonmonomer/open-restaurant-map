@@ -35,19 +35,29 @@ function createReview() {
     const review = new Review({ name: restName, rating: checkedRating })
 
     ReviewService.insert(review)
-    closeReviewPopup()
+    // closeReviewPopup()
+    hidePopup()
     display()
   }
 }
+
+const btnNewReview = document.getElementById('btnNewReview')
+btnNewReview.create = 'true'
+btnNewReview.addEventListener('click', showPopup)
 
 document
   .getElementById('btnCreateReviewSave')
   .addEventListener('click', createReview)
 
-function popupOverlayDisplay(display) {
-  const popupOverlay = document.getElementById('popup-overlay')
-  popupOverlay.style.display = display
+function hidePopup() {
+  const myModal = document.querySelector('#staticBackdrop')
+  bootstrap.Modal.getInstance(myModal).hide()
 }
+
+// function popupOverlayDisplay(display) {
+//   const popupOverlay = document.getElementById('popup-overlay')
+//   popupOverlay.style.display = display
+// }
 function hideEditButton() {
   let btnEditReviewSave = document.getElementById('btnEditReviewSave')
   let btnCreateReviewSave = document.getElementById('btnCreateReviewSave')
@@ -61,27 +71,27 @@ function hideCreateButton() {
   btnEditReviewSave.style.display = 'block'
   btnCreateReviewSave.style.display = 'none'
 }
-function showReviewPopup(event) {
-  if (event.target.create == 'true') {
-    hideEditButton()
-    let inputRestName = document.getElementById('restaurantName')
-    inputRestName.value = ''
-    document.getElementById('5star').checked = true
-  } else {
-    hideCreateButton()
-  }
-  popupOverlayDisplay('block')
-}
-const btnNewReview = document.getElementById('btnNewReview')
-btnNewReview.create = 'true'
-btnNewReview.addEventListener('click', showReviewPopup)
+// function showReviewPopup(event) {
+//   if (event.target.create == 'true') {
+//     hideEditButton()
+//     let inputRestName = document.getElementById('restaurantName')
+//     inputRestName.value = ''
+//     document.getElementById('5star').checked = true
+//   } else {
+//     hideCreateButton()
+//   }
+//   popupOverlayDisplay('block')
+// }
+// const btnNewReview = document.getElementById('btnNewReview')
+// btnNewReview.create = 'true'
+// btnNewReview.addEventListener('click', showReviewPopup)
 
-function closeReviewPopup() {
-  popupOverlayDisplay('none')
-}
+// function closeReviewPopup() {
+//   popupOverlayDisplay('none')
+// }
 
-const btnClosePopup = document.getElementById('btnClosePopup')
-btnClosePopup.addEventListener('click', closeReviewPopup)
+// const btnClosePopup = document.getElementById('btnClosePopup')
+// btnClosePopup.addEventListener('click', closeReviewPopup)
 
 function deleteReview(event) {
   // let reviews = localStorage.getItem('reviews')
@@ -101,9 +111,23 @@ function deleteReview(event) {
   display()
 }
 
-function editReview(event) {
-  showReviewPopup(event)
+function showPopup(event) {
+  const myModal = document.querySelector('#staticBackdrop')
+  const popup = bootstrap.Modal.getOrCreateInstance(myModal)
+  if (event.target.create == 'true') {
+    hideEditButton()
+    let inputRestName = document.getElementById('restaurantName')
+    inputRestName.value = ''
+    document.getElementById('5star').checked = true
+  } else {
+    hideCreateButton()
+  }
 
+  popup.show()
+}
+function editReview(event) {
+  // showReviewPopup(event)
+  showPopup(event)
   let id = parseInt(event.target.value)
   // console.log(id)
   const review = ReviewService.find(id)
@@ -123,7 +147,6 @@ btnEditReviewSave.addEventListener('click', editReviewSave)
 function editReviewSave(event) {
   const restaurantName = document.getElementById('restaurantName').value
 
-  // use for loop to compare primary key
   if (restaurantName === '' || restaurantName === null) {
     alert('Please enter a restaurant name.')
   } else {
@@ -145,7 +168,7 @@ function editReviewSave(event) {
 
     ReviewService.update(review)
 
-    closeReviewPopup()
+    hidePopup()
     display()
   }
 }
@@ -177,6 +200,7 @@ function display() {
 
     const btnEditReview = document.createElement('button')
     btnEditReview.innerText = 'Edit'
+    btnEditReview.className = 'btn btn-outline-primary'
     // console.log(review.id)
     btnEditReview.value = review.id
 
@@ -185,6 +209,7 @@ function display() {
 
     const btnDeleteReview = document.createElement('button')
     btnDeleteReview.innerText = 'Delete'
+    btnDeleteReview.className = 'btn btn-outline-primary'
     btnDeleteReview.value = review.id
     divReview.appendChild(btnDeleteReview)
     btnDeleteReview.addEventListener('click', deleteReview)
